@@ -1,0 +1,40 @@
+{
+  "name": "shack-blackboard",
+  "version": "0.1.0",
+  "description": "Shared-state MCP server providing a blackboard, pub/sub topics, and named locks for multi-agent coordination",
+  "license": "Apache-2.0",
+  "author": "Vlad Bordei <bordeivlad@gmail.com>",
+  "type": "module",
+  "bin": {
+    "shack-blackboard": "./dist/main.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "start": "node dist/main.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "typescript": "^5.0.0",
+    "@types/jest": "^29.0.0"
+  },
+  "jest": {
+    "preset": "ts-jest/presets/default-esm",
+    "testEnvironment": "node",
+    "testMatch": ["**/src/__tests__/**/*.test.ts"],
+    "extensionsToTreatAsEsm": [".ts"],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
+    }
+  }
+}
