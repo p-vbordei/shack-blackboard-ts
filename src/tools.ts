@@ -1,5 +1,9 @@
 /**
  * MCP tool schema definitions and dispatch logic.
+ *
+ * {@link TOOLS_SCHEMA} contains every tool this server exposes, in the format
+ * the `tools/list` method returns.  {@link dispatchTool} is the single entry
+ * point that executes a named tool against the shared state.
  */
 
 import { SharedState, validateKey } from "./state.js";
@@ -107,6 +111,11 @@ export const TOOLS_SCHEMA = [
 
 type Args = Record<string, unknown> | null | undefined;
 
+/**
+ * Extract a required string field from `args`.
+ *
+ * @throws {Error} If `args` is falsy, the field is absent, or its value is not a string.
+ */
 function requiredStr(args: Args, field: string): string {
   if (!args || typeof args[field] !== "string") {
     throw new Error(`Missing or invalid parameter: ${field} (must be a string)`);
@@ -114,8 +123,18 @@ function requiredStr(args: Args, field: string): string {
   return args[field] as string;
 }
 
+/** Shape of a successful tool result. */
 type ToolResult = Record<string, unknown>;
 
+/**
+ * Execute a named MCP tool against `state` and return the result object.
+ *
+ * @param name - The tool name, e.g. `"write_blackboard"`.
+ * @param args - The `arguments` dict from the `tools/call` params.
+ * @param state - The shared in-memory state.
+ * @returns A `{ content: [...] }` object suitable for a `tools/call` response.
+ * @throws {Error} For invalid/missing arguments or an unknown tool name.
+ */
 export function dispatchTool(name: string, args: Args, state: SharedState): ToolResult {
   switch (name) {
     case "write_blackboard": {
